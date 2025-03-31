@@ -1,0 +1,92 @@
+-- Drop existing tables
+DROP TABLE IF EXISTS enrollments;
+DROP TABLE IF EXISTS courses;
+DROP TABLE IF EXISTS departments;
+DROP TABLE IF EXISTS student;
+
+-- Create tables with corrections
+CREATE TABLE student (
+  student_id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  age INT NOT NULL,
+  gender VARCHAR(6) CHECK (gender IN ('MALE', 'FEMALE', 'OTHER')) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  enrollment_date DATE NOT NULL
+);
+
+CREATE TABLE departments (
+  department_id SERIAL PRIMARY KEY,
+  department_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE courses (
+  course_id SERIAL PRIMARY KEY,
+  courses_name VARCHAR(100) NOT NULL,
+  department_id INT NOT NULL,
+  credits INT NOT NULL
+);
+
+CREATE TABLE enrollments (
+  enrollment_id SERIAL PRIMARY KEY,
+  student_id INT REFERENCES student (student_id) ON DELETE CASCADE,
+  course_id INT REFERENCES courses (course_id) ON DELETE CASCADE,
+  grade VARCHAR(2)
+);
+
+-- Insert data into departments
+INSERT INTO departments (department_name)
+VALUES
+  ('Computer Science'),
+  ('Mathematics'),
+  ('Physics'),
+  ('Biology'),
+  ('History');
+
+-- Insert data into student
+INSERT INTO student (name, age, gender, email, enrollment_date)
+VALUES
+  ('Alice Smith', 20, 'FEMALE', 'alice.smith@example.com', '2023-09-01'),
+  ('Bob Johnson', 22, 'MALE', 'bob.johnson@example.com', '2023-09-01'),
+  ('Charlie Brown', 19, 'MALE', 'charlie.brown@example.com', '2023-09-01'),
+  ('Diana Prince', 21, 'FEMALE', 'diana.prince@example.com', '2023-09-01'),
+  ('Eve Adams', 23, 'OTHER', 'eve.adams@example.com', '2023-09-01');
+
+-- Insert data into courses
+INSERT INTO courses (courses_name, department_id, credits)
+VALUES
+  ('Introduction to Programming', 1, 3),
+  ('Calculus I', 2, 4),
+  ('Physics Mechanics', 3, 3),
+  ('Biology Basics', 4, 4),
+  ('World History', 5, 3);
+
+-- Insert data into enrollments
+INSERT INTO enrollments (student_id, course_id, grade)
+VALUES
+  (1, 1, 'A'),
+  (2, 2, 'B'),
+  (3, 3, 'A'),
+  (4, 4, 'C'),
+  (5, 5, 'B');
+
+
+SELECT 
+    s.name AS student_name,
+    c.courses_name AS course_name,
+    e.grade
+FROM 
+    enrollments e
+JOIN 
+    student s ON e.student_id = s.student_id
+JOIN 
+    courses c ON e.course_id = c.course_id;
+
+INSERT INTO student (name, age, gender, email, enrollment_date)
+VALUES ('Frank Miller', 20, 'MALE', 'frank.miller@example.com', '2023-10-01');
+
+UPDATE enrollments
+SET grade = 'A+'
+WHERE student_id = 1 AND course_id = 1;
+
+DELETE FROM student
+WHERE student_id = 5;
