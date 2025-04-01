@@ -90,3 +90,12 @@ WHERE student_id = 1 AND course_id = 1;
 
 DELETE FROM student
 WHERE student_id = 5;
+
+#TO ADD FOREIGN KEY CONSTRAINTS
+ALTER TABLE departments
+ADD teacher_id INT  
+REFERENCES teacher(teacher_id) ON DELETE CASCADE,
+
+ADD course_id INT 
+REFERENCES courses(course_id) ON DELETE CASCADE,
+
