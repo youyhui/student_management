@@ -30,11 +30,6 @@ def create_tables():
     conn = db_connection()
     cursor = conn.cursor()
     
-    # Dropping existing tables
-    cursor.execute("DROP TABLE IF EXISTS enrollments;")
-    cursor.execute("DROP TABLE IF EXISTS courses;")
-    cursor.execute("DROP TABLE IF EXISTS departments;")
-    cursor.execute("DROP TABLE IF EXISTS student;")
 
     # Creating tables
     cursor.execute("""
